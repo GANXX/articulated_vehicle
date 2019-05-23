@@ -1,0 +1,1 @@
+controller_joint_names: ['leftfrontwheel_to_frontbase', 'rightfrontwheel_to_frontbase', 'behindbase_to_frontbase', 'leftbehindwheel_to_behindbase', 'rightbehindwheel_to_behindbase', ]

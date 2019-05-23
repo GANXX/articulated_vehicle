@@ -1,0 +1,379 @@
+<?xml version="1.0" ?>
+<robot
+  name="vehicle_urdf_model">
+  <link
+    name="frontbase_link">
+    <inertial>
+      <origin
+        xyz="-0.15633 2.387E-07 1.0079"
+        rpy="0 0 0" />
+      <mass
+        value="4010.5" />
+      <inertia
+        ixx="1162.3"
+        ixy="0.0010713"
+        ixz="167.32"
+        iyy="1890.1"
+        iyz="-0.0014653"
+        izz="1714.5" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://vehicle_urdf_model/meshes/frontbase_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://vehicle_urdf_model/meshes/frontbase_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="leftfrontwheel_Link">
+    <inertial>
+      <origin
+        xyz="-1.1102E-16 -0.17395 -1.1102E-16"
+        rpy="0 0 0" />
+      <mass
+        value="370.59" />
+      <inertia
+        ixx="63.343"
+        ixy="1.0524E-16"
+        ixz="-1.4211E-14"
+        iyy="119.19"
+        iyz="-4.5117E-17"
+        izz="63.343" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://vehicle_urdf_model/meshes/leftfrontwheel_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.69804 0.69804 0.69804 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://vehicle_urdf_model/meshes/leftfrontwheel_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="leftfrontwheel_to_frontbase"
+    type="continuous">
+    <origin
+      xyz="0 0.436 0.75"
+      rpy="3.1416 0.91009 -7.8779E-17" />
+    <parent
+      link="frontbase_link" />
+    <child
+      link="leftfrontwheel_Link" />
+    <axis
+      xyz="0 -1 0" />
+    <limit
+      effort="10000"
+      velocity="0.465" />
+  </joint>
+  <link
+    name="rightfrontwheel_Link">
+    <inertial>
+      <origin
+        xyz="1.1102E-16 -0.17395 -1.1102E-16"
+        rpy="0 0 0" />
+      <mass
+        value="370.59" />
+      <inertia
+        ixx="63.343"
+        ixy="8.8544E-17"
+        ixz="-3.0304E-49"
+        iyy="119.19"
+        iyz="-1.3628E-17"
+        izz="63.343" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://vehicle_urdf_model/meshes/rightfrontwheel_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.69804 0.69804 0.69804 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://vehicle_urdf_model/meshes/rightfrontwheel_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="rightfrontwheel_to_frontbase"
+    type="continuous">
+    <origin
+      xyz="0 -0.436 0.75"
+      rpy="-3.1416 -0.72502 3.1416" />
+    <parent
+      link="frontbase_link" />
+    <child
+      link="rightfrontwheel_Link" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      effort="10000"
+      velocity="0.465" />
+  </joint>
+  <link
+    name="bucket_Link">
+    <inertial>
+      <origin
+        xyz="0.74023 0.075114 -0.4744"
+        rpy="0 0 0" />
+      <mass
+        value="430.29" />
+      <inertia
+        ixx="189.03"
+        ixy="-0.040889"
+        ixz="0.99239"
+        iyy="144.24"
+        iyz="-0.025532"
+        izz="213.42" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://vehicle_urdf_model/meshes/bucket_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://vehicle_urdf_model/meshes/bucket_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="bucket_to_frontbase"
+    type="fixed">
+    <origin
+      xyz="0.9 -0.0749999999999995 1.74241197924929"
+      rpy="-2.6404883777743E-17 -0.0689393308210947 1.7078045080171E-17" />
+    <parent
+      link="frontbase_link" />
+    <child
+      link="bucket_Link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="behindbase_Link">
+    <inertial>
+      <origin
+        xyz="-1.9425 -0.023265 -0.39896"
+        rpy="0 0 0" />
+      <mass
+        value="6875.3" />
+      <inertia
+        ixx="2690.7"
+        ixy="-223.16"
+        ixz="-1179.2"
+        iyy="11410"
+        iyz="1.9486"
+        izz="10816" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://vehicle_urdf_model/meshes/behindbase_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.59216 0.61961 0.65098 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://vehicle_urdf_model/meshes/behindbase_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="behindbase_to_frontbase"
+    type="revolute">
+    <origin
+      xyz="-1.5 0 1.585"
+      rpy="1.2202E-16 -2.4629E-16 0.014505" />
+    <parent
+      link="frontbase_link" />
+    <child
+      link="behindbase_Link" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.698"
+      upper="0.698"
+      effort="10000"
+      velocity="0.1396" />
+  </joint>
+  <link
+    name="leftbehindwheel_Link">
+    <inertial>
+      <origin
+        xyz="0 -0.17395 2.2204E-16"
+        rpy="0 0 0" />
+      <mass
+        value="370.59" />
+      <inertia
+        ixx="63.343"
+        ixy="1.2212E-15"
+        ixz="3.399E-16"
+        iyy="119.19"
+        iyz="6.3838E-16"
+        izz="63.343" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://vehicle_urdf_model/meshes/leftbehindwheel_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.69804 0.69804 0.69804 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://vehicle_urdf_model/meshes/leftbehindwheel_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="leftbehindwheel_to_behindbase"
+    type="continuous">
+    <origin
+      xyz="-1.467 0.436 -0.835"
+      rpy="1.7384E-17 0.12873 -3.1416" />
+    <parent
+      link="behindbase_Link" />
+    <child
+      link="leftbehindwheel_Link" />
+    <axis
+      xyz="0 -1 0" />
+    <limit
+      effort="10000"
+      velocity="0.465" />
+  </joint>
+  <link
+    name="rightbehindwheel_Link">
+    <inertial>
+      <origin
+        xyz="0 -0.17395 -2.2204E-16"
+        rpy="0 0 0" />
+      <mass
+        value="370.59" />
+      <inertia
+        ixx="63.343"
+        ixy="6.1062E-16"
+        ixz="-1.3869E-15"
+        iyy="119.19"
+        iyz="-4.4409E-16"
+        izz="63.343" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://vehicle_urdf_model/meshes/rightbehindwheel_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.69804 0.69804 0.69804 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://vehicle_urdf_model/meshes/rightbehindwheel_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="rightbehindwheel_to_behindbase"
+    type="continuous">
+    <origin
+      xyz="-1.467 -0.436 -0.835"
+      rpy="-3.1416 -0.9242 3.1416" />
+    <parent
+      link="behindbase_Link" />
+    <child
+      link="rightbehindwheel_Link" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      effort="10000"
+      velocity="0.465" />
+  </joint>
+</robot>

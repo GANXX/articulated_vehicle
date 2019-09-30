@@ -1,0 +1,4 @@
+<launch>
+    <include file="$(find hector_slam_launch)/launch/slam.launch"/>
+    <include file="$(find socketcan_bridge)/launch/can_and_pid.launch"/>
+</launch>

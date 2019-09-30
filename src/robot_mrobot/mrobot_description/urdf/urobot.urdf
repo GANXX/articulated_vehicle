@@ -1,0 +1,671 @@
+<?xml version="1.0"?>
+<robot name="urobot">
+  <link name="base_footprint"/>
+  <joint name="base_footprint_to_base" type="fixed">
+    <axis rpy="0 0 0" xyz="0 0 0"/>
+    <parent link="base_footprint"/>
+    <child link="base_link"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+  </joint>
+  <link name="base_link"/>
+  <joint name="base_link_to_frontbase" type="fixed">
+    <axis rpy="0 0 0" xyz="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="frontbase_link"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+  </joint>
+
+  <link
+    name="frontbase_link">
+    <inertial>
+      <origin
+        xyz="-0.15633 2.387E-07 1.0079"
+        rpy="0 0 0" />
+      <mass
+        value="4010.5" />
+      <inertia
+        ixx="1162.3"
+        ixy="0.0010713"
+        ixz="167.32"
+        iyy="1890.1"
+        iyz="-0.0014653"
+        izz="1714.5" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mrobot_description/models/meshes/frontbase_link.dae" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mrobot_description/models/meshes/frontbase_link.dae" />
+      </geometry>
+    </collision>
+  </link>
+
+  <link
+    name="leftfrontwheel_Link">
+    <inertial>
+      <origin
+        xyz="-1.1102E-16 -0.17395 -1.1102E-16"
+        rpy="0 0 0" />
+      <mass
+        value="370.59" />
+      <inertia
+        ixx="63.343"
+        ixy="1.0524E-16"
+        ixz="-1.4211E-14"
+        iyy="119.19"
+        iyz="-4.5117E-17"
+        izz="63.343" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+	    filename="package://mrobot_description/models/meshes/leftfrontwheel_Link.dae" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.69804 0.69804 0.69804 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mrobot_description/models/meshes/leftfrontwheel_Link.dae" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="leftfrontwheel_to_frontbase"
+    type="continuous">
+    <origin
+      xyz="0 0.436 0.75"
+      rpy="3.1416 0.91009 -7.8779E-17" />
+    <parent
+      link="frontbase_link" />
+    <child
+      link="leftfrontwheel_Link" />
+    <axis
+      xyz="0 -1 0" />
+    <limit
+      effort="10000"
+      velocity="200" />
+  </joint>
+  <link
+    name="rightfrontwheel_Link">
+    <inertial>
+      <origin
+        xyz="1.1102E-16 -0.17395 -1.1102E-16"
+        rpy="0 0 0" />
+      <mass
+        value="370.59" />
+      <inertia
+        ixx="63.343"
+        ixy="8.8544E-17"
+        ixz="-3.0304E-49"
+        iyy="119.19"
+        iyz="-1.3628E-17"
+        izz="63.343" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mrobot_description/models/meshes/rightfrontwheel_Link.dae" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.69804 0.69804 0.69804 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mrobot_description/models/meshes/rightfrontwheel_Link.dae" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="rightfrontwheel_to_frontbase"
+    type="continuous">
+    <origin
+      xyz="0 -0.436 0.75"
+      rpy="-3.1416 -0.72502 3.1416" />
+    <parent
+      link="frontbase_link" />
+    <child
+      link="rightfrontwheel_Link" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      effort="10000"
+      velocity="200" />
+  </joint>
+  <link
+    name="bucket_Link">
+    <inertial>
+      <origin
+        xyz="0.74023 0.075114 -0.4744"
+        rpy="0 0 0" />
+      <mass
+        value="430.29" />
+      <inertia
+        ixx="189.03"
+        ixy="-0.040889"
+        ixz="0.99239"
+        iyy="144.24"
+        iyz="-0.025532"
+        izz="213.42" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mrobot_description/models/meshes/bucket_Link.dae" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mrobot_description/models/meshes/bucket_Link.dae" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="bucket_to_frontbase"
+    type="fixed">
+    <origin
+      xyz="0.9 -0.0749999999999995 1.74241197924929"
+      rpy="-2.6404883777743E-17 -0.0689393308210947 1.7078045080171E-17" />
+    <parent
+      link="frontbase_link" />
+    <child
+      link="bucket_Link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="behindbase_Link">
+    <inertial>
+      <origin
+        xyz="-1.9425 -0.023265 -0.39896"
+        rpy="0 0 0" />
+      <mass
+        value="6875.3" />
+      <inertia
+        ixx="2690.7"
+        ixy="-223.16"
+        ixz="-1179.2"
+        iyy="11410"
+        iyz="1.9486"
+        izz="10816" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mrobot_description/models/meshes/behindbase_Link.dae" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.59216 0.61961 0.65098 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mrobot_description/models/meshes/behindbase_Link.dae" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="behindbase_to_frontbase"
+    type="revolute">
+    <origin
+      xyz="-1.5 0 1.585"
+      rpy="1.2202E-16 -2.4629E-16 0.014505" />
+    <parent
+      link="frontbase_link" />
+    <child
+      link="behindbase_Link" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.698"
+      upper="0.698"
+      effort="10000"
+      velocity="0.1396" />
+  </joint>
+  <link
+    name="leftbehindwheel_Link">
+    <inertial>
+      <origin
+        xyz="0 -0.17395 2.2204E-16"
+        rpy="0 0 0" />
+      <mass
+        value="370.59" />
+      <inertia
+        ixx="63.343"
+        ixy="1.2212E-15"
+        ixz="3.399E-16"
+        iyy="119.19"
+        iyz="6.3838E-16"
+        izz="63.343" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mrobot_description/models/meshes/leftbehindwheel_Link.dae" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.69804 0.69804 0.69804 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mrobot_description/models/meshes/leftbehindwheel_Link.dae" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="leftbehindwheel_to_behindbase"
+    type="continuous">
+    <origin
+      xyz="-1.467 0.436 -0.835"
+      rpy="1.7384E-17 0.12873 -3.1416" />
+    <parent
+      link="behindbase_Link" />
+    <child
+      link="leftbehindwheel_Link" />
+    <axis
+      xyz="0 -1 0" />
+    <limit
+      effort="10000"
+      velocity="200" />
+  </joint>
+  <link
+    name="rightbehindwheel_Link">
+    <inertial>
+      <origin
+        xyz="0 -0.17395 -2.2204E-16"
+        rpy="0 0 0" />
+      <mass
+        value="370.59" />
+      <inertia
+        ixx="63.343"
+        ixy="6.1062E-16"
+        ixz="-1.3869E-15"
+        iyy="119.19"
+        iyz="-4.4409E-16"
+        izz="63.343" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mrobot_description/models/meshes/rightbehindwheel_Link.dae" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.69804 0.69804 0.69804 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mrobot_description/models/meshes/rightbehindwheel_Link.dae" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="rightbehindwheel_to_behindbase"
+    type="continuous">
+    <origin
+      xyz="-1.467 -0.436 -0.835"
+      rpy="-3.1416 -0.9242 3.1416" />
+    <parent
+      link="behindbase_Link" />
+    <child
+      link="rightbehindwheel_Link" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      effort="10000"
+      velocity="200" />
+  </joint>
+
+
+
+  <link
+    name="laser360_Link">
+    <inertial>
+      <origin
+        xyz="-1.11022302462516E-16 -1.57772181044202E-30 1"
+        rpy="0 0 0" />
+      <mass
+        value="0.637680476825656" />
+      <inertia
+        ixx="0.000994299544995147"
+        ixy="3.67294170291127E-37"
+        ixz="-2.3039296165318E-21"
+        iyy="0.000994299544995147"
+        iyz="-3.87028009513926E-36"
+        izz="0.000697002385505229" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mrobot_description/models/meshes/laser360_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.698039215686274 0.698039215686274 0.698039215686274 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mrobot_description/models/meshes/laser360_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="laser360_to_base"
+    type="fixed">
+    <origin
+      xyz="-0.728241888910018 0 0.533000000000001"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="laser360_Link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="gps_Link">
+    <inertial>
+      <origin
+        xyz="0 3.27121061795215E-19 0.0130186828614431"
+        rpy="0 0 0" />
+      <mass
+        value="0.884541453056413" />
+      <inertia
+        ixx="0.00132579849810967"
+        ixy="1.61317190778527E-34"
+        ixz="-1.28983914639267E-19"
+        iyy="0.00132579849810967"
+        iyz="-2.80298504130704E-19"
+        izz="0.00155644116872113" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mrobot_description/models/meshes/gps_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.698039215686274 0.698039215686274 0.698039215686274 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+	    filename="package://mrobot_description/models/meshes/gps_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="gps_to_base"
+    type="fixed">
+    <origin
+      xyz="-1.018 0 0.2798"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="gps_Link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+
+<!--gazebo 配置文件-->
+        <!--<gazebo reference="laser360_Link">-->
+            <!--<sensor type="ray" name="rplidar">-->
+                <!--<pose>0 0 0 0 0 0</pose>-->
+                <!--<visualize>false</visualize>-->
+                <!--<update_rate>5.5</update_rate>-->
+                <!--<ray>-->
+                    <!--<scan>-->
+                      <!--<horizontal>-->
+                        <!--<samples>360</samples>-->
+                        <!--<resolution>1</resolution>-->
+                        <!--<min_angle>-3</min_angle>-->
+                        <!--<max_angle>3</max_angle>-->
+                      <!--</horizontal>-->
+                    <!--</scan>-->
+                    <!--<range>-->
+                      <!--<min>0.10</min>-->
+                      <!--<max>6.0</max>-->
+                      <!--<resolution>0.01</resolution>-->
+                    <!--</range>-->
+                    <!--<noise>-->
+                      <!--<type>gaussian</type>-->
+                      <!--<mean>0.0</mean>-->
+                      <!--<stddev>0.01</stddev>-->
+                    <!--</noise>-->
+                <!--</ray>-->
+                <!--<plugin name="gazebo_rplidar" filename="libgazebo_ros_laser.so">-->
+                    <!--<topicName>scan</topicName>-->
+                    <!--<frameName>laser360_Link</frameName>-->
+                <!--</plugin>-->
+            <!--</sensor>-->
+        <!--</gazebo>-->
+    <gazebo reference="laser360_Link">
+      <sensor type="gpu_ray" name="laser360_Link">
+	<always_on>true</always_on>
+	<update_rate>100.0</update_rate>
+	<pose>0 0 0 0 0 0</pose>
+	<visualize>false</visualize>
+	<ray>
+	  <scan>
+	    <horizontal>
+	      <samples>720</samples> 
+	      <resolution>1</resolution>
+	      <min_angle>-3.1416</min_angle>
+	      <max_angle>3.1416</max_angle>
+	    </horizontal>
+	  </scan>
+	  <range>
+	    <min>0.2</min>
+	    <max>15.0</max>
+	    <resolution>0.005</resolution>
+	  </range>
+	</ray>
+
+	<plugin name="gazebo_ros_laser360_controller" filename="libgazebo_ros_gpu_laser.so">
+	  <gaussianNoise>0.01</gaussianNoise>
+	  <alwaysOn>true</alwaysOn>
+	  <updateRate>100.0</updateRate>
+	  <topicName>scan</topicName>
+	  <frameName>laser360_Link</frameName>
+	</plugin>
+      </sensor>
+    </gazebo>
+
+
+  <gazebo reference="imu_link">
+    <gravity>true</gravity>
+    <sensor name="imu_sensor" type="imu">
+      <always_on>true</always_on>
+      <update_rate>100</update_rate>
+      <visualize>true</visualize>
+      <topic>__default_topic__</topic>
+      <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
+        <topicName>imu</topicName>
+        <bodyName>imu_link</bodyName>
+        <updateRateHZ>10.0</updateRateHZ>
+        <gaussianNoise>0.0</gaussianNoise>
+        <xyzOffset>0 0 0</xyzOffset>
+        <rpyOffset>0 0 0</rpyOffset>
+        <frameName>imu_link</frameName>
+      </plugin>
+      <pose>0 0 0 0 0 0</pose>
+    </sensor>
+  </gazebo>
+
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/xbot</robotNamespace>
+      <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+      <legacyModeNS>true</legacyModeNS>
+    </plugin>
+  </gazebo>
+
+  <gazebo reference="frontbase_link">
+    <mu>0</mu>
+    <mu2>0</mu2>
+    <kp>100000000.0</kp>
+    <kd>10000.0</kd>   
+  </gazebo>
+  <gazebo reference="behindbase_Link">
+    <mu>0</mu>
+    <mu2>0</mu2>
+    <kp>100000000.0</kp>
+    <kd>10000.0</kd>   
+  </gazebo>
+
+  <gazebo reference="leftfrontwheel_Link">
+    <mu>0.6</mu>
+    <mu2>0.6</mu2>
+    <kp>100000000.0</kp>
+    <kd>10000.0</kd>    
+  </gazebo>
+  <gazebo reference="rightfrontwheel_Link">
+    <mu>0.6</mu>
+    <mu2>0.6</mu2>
+    <kp>100000000.0</kp>
+    <kd>10000.0</kd>    
+  </gazebo>
+  <gazebo reference="leftbehindwheel_Link">
+    <mu>0.6</mu>
+    <mu2>0.6</mu2>
+    <kp>100000000.0</kp>
+    <kd>10000.0</kd>    
+  </gazebo>
+
+  <gazebo reference="rightbehindwheel_Link">
+    <mu>0.6</mu>
+    <mu2>0.6</mu2>
+    <kp>100000000.0</kp>
+    <kd>10000.0</kd>    
+  </gazebo>
+
+
+  <!--Transmission and actuators-->
+  <transmission name="leftwheel_tran1">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="leftfrontwheel_to_frontbase">
+	<hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="left_wheel_motor1">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="leftwheel_tran2">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="rightfrontwheel_to_frontbase">
+	<hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="left_wheel_motor2">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="articulate_trassmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="behindbase_to_frontbase">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    </joint>
+  <actuator name="articulate_motor">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+</robot>

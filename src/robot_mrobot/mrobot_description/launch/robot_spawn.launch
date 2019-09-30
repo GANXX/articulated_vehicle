@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="robot" default="mrobot"/>
+  <arg name="debug" default="false"/>
+  <arg name="gui" default="true"/>
+  <arg name="headless" default="false"/>
+
+  <!-- Start Gazebo with a blank world -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <!--<arg name="world_name" value="$(find mrobot_gazebo)/worlds/articulate_path.world"/>-->
+    <arg name="debug" value="$(arg debug)" />
+    <arg name="gui" value="$(arg gui)" />
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="headless" value="$(arg headless)"/>
+  </include>
+
+  <!-- Oh, you wanted a robot? -->
+  <include file="$(find mrobot_description)/launch/include/$(arg robot).launch.xml" /> 
+  <include file="$(find vinyson_Joystick)/launch/vinyson_joy_start.launch"/>
+  <!--node    name="rviz"    pkg="rviz"    type="rviz"    args="-d $(find robot_sim_demo)/urdf_gazebo.rviz" /-->
+  <node pkg="vinyson_Joystick" type="auto_goal" name="auto_goal" output="screen"/> 
+</launch>

@@ -1,0 +1,30 @@
+# Parameters for control loop
+pub_twist_cmd: true   #是否发布速度指令
+debug_info: false     #是否调试
+delay_mode: true      #是否采用运动补偿策略
+max_speed: 1.5 # unit: m/s  #车辆最快前进速度
+path_length: 8.0 # unit: m  #采用多长的路径进行路径的样条拟合
+goal_radius: 0.2 # unit: m  #距离目标点多长的距离认定为到达目标
+controller_freq: 10         #控制频率是多少
+vehicle_Lf: 0.0723 # distance between the front of the vehicle and its center of gravity
+# Parameter for MPC solver
+mpc_steps:        20.0  # 预测时域(现在预测时域和控制时域一样长)
+mpc_ref_cte:      0.0   # 期望的横向偏差值
+mpc_ref_epsi:     0.0   # 期望的航向角偏差值
+mpc_ref_vel:      1.0   # 期望的速度值
+mpc_w_cte:        1000.0 # 横向偏差值调节加权量
+mpc_w_epsi:       1000.0 # 航向偏差值调节加权量
+mpc_w_vel:        50.0 # 速度调节加权量
+mpc_w_delta:      30.0 # 角度调节加权量
+mpc_w_accel:      20.0  # 加速度调节加权量
+mpc_w_delta_d:    0.0   # 角速度的加权量
+mpc_w_accel_d:    0.0   # 加加速度的加权量
+mpc_max_steering: 0.436 # 最大转向角速度
+mpc_max_throttle: 0.8   # Maximal throttle accel
+mpc_bound_value:  1.0e3 # Bound value for other variables
+global_path_topic: /move_base/GlobalPlanner/plan
+goal_topic:  /move_base_simple/goal 
+map_frame:  /map 
+odom_frame:  /odom
+car_frame:  /base_footprint 
+

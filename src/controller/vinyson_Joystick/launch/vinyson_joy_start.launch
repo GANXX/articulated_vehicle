@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="joy_dev" default="/dev/input/js0"/>
+
+    <node pkg="joy" type="joy_node" name="joy_node">
+	<param name="dev" value="$(arg joy_dev)"/>
+	<param name="deadzone" value="0.005"/>
+	<param name="autorepeat_rate" value="20"/>
+    </node>
+
+    <node pkg="vinyson_Joystick" type="vinyson_driver" name="vinyson_driver" output="screen">
+    </node>
+</launch>

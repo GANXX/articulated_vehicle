@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<launch>
+ 
+<node pkg="pid" type="odom_pub" name="odom_pub"> 
+    <param name="/use_sim_time" value="true" />
+</node>
+
+  <include file="$(find mrobot_navigation)/launch/include/mrobot_gmapping_nav.launch.xml"/>
+
+   <!--Move base -->
+ <include file="$(find mrobot_navigation)/launch/include/move_base_start.launch.xml"/>
+
+</launch>

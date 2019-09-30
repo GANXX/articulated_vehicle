@@ -1,0 +1,58 @@
+DWAPlannerROS:
+
+# Robot Configuration Parameters
+  max_vel_x: 1.5
+  min_vel_x: -0.8
+
+  max_vel_y: 0.0
+  min_vel_y: 0.0
+
+  # The velocity when robot is moving in a straight line
+  max_vel_trans:  1.5
+  min_vel_trans:  0.2
+  # trans_stopped_vel: 0.1
+
+  max_vel_theta: 1.0
+  min_vel_theta: 0.4
+  # rot_stopped_vel: 2.0
+
+  acc_lim_x: 2
+  acc_lim_theta: 2.5
+  acc_lim_y: 2
+
+# Goal Tolerance Parametes
+  yaw_goal_tolerance: 3.14 
+  xy_goal_tolerance:  0.3
+  latch_xy_goal_tolerance: false
+
+# Forward Simulation Parameters
+  sim_time: 2
+  vx_samples: 20
+  vy_samples: 0
+  vtheta_samples: 30
+
+  # 每隔多远检测一次有无障碍物，数越小需要的计算量越大
+  sim granularity: 0.15 
+
+  holonomic_robot: false
+
+# Trajectory Scoring Parameters
+  # 局部规划路径贴近全局规划路径的权重
+  path_distance_bias: 32.0
+  # 尝试去到达局部目标的权重，过大会造成偏离全局路径  
+  goal_distance_bias: 20.0
+  #  尝试去躲避障碍物的权重，过大会使得机器人陷入困境（stuck in place）  
+  occdist_scale: 0.02
+
+  forward_point_distance: 0.325
+  stop_time_buffer: 0.2
+  scaling_speed: 0.6   #0.25
+  max_scaling_factor: 0.2
+
+# Oscillation Prevention Parameters
+  oscillation_reset_dist: 0.05
+
+# Debugging
+  publish_traj_pc : true
+  publish_cost_grid_pc: true
+  global_frame_id: map

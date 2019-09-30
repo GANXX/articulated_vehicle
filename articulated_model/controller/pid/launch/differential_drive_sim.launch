@@ -1,0 +1,43 @@
+<launch>
+    <node name="velocity_controller" pkg="pid" type="controller" output="screen" >
+      <param name="Kp" value="5.0" />
+      <param name="Ki" value="0.0" />
+      <param name="Kd" value="0.1" />
+      <param name="upper_limit" value="10" />
+      <param name="lower_limit" value="-10" />
+      <param name="windup_limit" value="10" />
+      <param name="max_loop_frequency" value="100.0" />
+      <param name="min_loop_frequency" value="100.0" />
+      <param name="topic_from_controller" value="vel_v" />
+      <param name="topic_from_plant" value="fb_v" />
+      <param name="pid_enable_topic" value="pid_enable_v" />
+      <param name="pid_debug_topic" value="pid_debug_v" />
+      <remap from="setpoint" to="/Setpoint_v" />
+     </node>
+
+    <node name="angular_speed_controller" pkg="pid" type="controller" output="screen" >
+      <param name="Kp" value="-4.0" />
+      <param name="Ki" value="-0.0" />
+      <param name="Kd" value="-0.3" />
+      <param name="upper_limit" value="10" />
+      <param name="lower_limit" value="-10" />
+      <param name="windup_limit" value="10" />
+      <param name="max_loop_frequency" value="100.0" />
+      <param name="min_loop_frequency" value="100.0" />
+      <param name="topic_from_controller" value="vel_w" />
+      <param name="topic_from_plant" value="fb_w" />
+      <param name="pid_enable_topic" value="pid_enable_w" />
+      <param name="pid_debug_topic" value="pid_debug_w" />
+      <remap from="setpoint" to="/Setpoint_w" />
+     </node>
+
+    <!-- 开启transform_output节点 -->
+    <node name="transform_output" pkg="pid" type="transform_output" output="screen" />
+
+    <!-- rqt_plot is a resource hog, so if you're seeing high CPU usage, don't launch it  -->
+    <node name="rqt_plot" pkg="rqt_plot" type="rqt_plot"
+    args="/vel_v/data /fb_v/data /vel_w/data /fb_w/data /setpoint/data" />
+
+
+
+</launch>

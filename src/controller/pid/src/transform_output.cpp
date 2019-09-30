@@ -2,17 +2,24 @@
 #include "ros/ros.h"
 #include "std_msgs/Float64.h"
 #include "geometry_msgs/Twist.h"
+#include "pid/wheel_vel.h"
 #include <iostream>
 using namespace std;
 namespace sp
 {
      
 // 创建一个消息类型 setpoint
-  std_msgs::Float64 left_wheel_v;
-  std_msgs::Float64 right_wheel_v;
+  std_msgs::Float64 left1_wheel_v;
+  std_msgs::Float64 left2_wheel_v;
+  std_msgs::Float64 left3_wheel_v;
+  std_msgs::Float64 right1_wheel_v;
+  std_msgs::Float64 right2_wheel_v;
+  std_msgs::Float64 right3_wheel_v;
+  pid::wheel_vel wheel_v;
  //设置履带车辆的宽度和长度 
-    const double ROBOT_RADIUS = 0.46;
-    const double ROBOT_LENGTH = 1;
+    const double WHEEL_RADIUS = 0.078;
+    const double ROBOT_RADIUS = 0.2095;
+    const double ROBOT_LENGTH = 1.096;
 }
 
 using namespace sp;
@@ -43,8 +50,16 @@ void getcarcontrol(const geometry_msgs::Twist vel_msg)
 		setpoint_right = YawRate * (r + ROBOT_RADIUS);
 		
 	}
-	left_wheel_v.data  = 20*setpoint_left;
-	right_wheel_v.data = 20*setpoint_right;
+	//车轮正值逆时针旋转，负值顺时针旋转
+	left1_wheel_v.data  = - setpoint_left/WHEEL_RADIUS;
+	left2_wheel_v.data  = - setpoint_left/WHEEL_RADIUS;
+	left3_wheel_v.data  = - setpoint_left/WHEEL_RADIUS;
+	right1_wheel_v.data = - setpoint_right/WHEEL_RADIUS;
+	right2_wheel_v.data = - setpoint_right/WHEEL_RADIUS;
+	right3_wheel_v.data = - setpoint_right/WHEEL_RADIUS;
+	
+	wheel_v.left_vel.data  = - setpoint_left/WHEEL_RADIUS;
+	wheel_v.right_vel.data = - setpoint_right/WHEEL_RADIUS;
 
 }
 
@@ -64,17 +79,26 @@ int main(int argc, char** argv)
 //创建话题订阅 cmd_vel
   ros::Subscriber subcar = n.subscribe("cmd_vel_for_control", 1000, getcarcontrol);
 //创建一个话题发布
-  ros::Publisher setpoint_pub_v = n.advertise<std_msgs::Float64>("left_wheel_v", 1000);
-  ros::Publisher setpoint_pub_w = n.advertise<std_msgs::Float64>("right_wheel_v", 1000);
-  ros::Rate loop_rate(100);  
+  ros::Publisher setpoint_pub_l1 = n.advertise<std_msgs::Float64>("left1_wheel_v", 1000);
+  ros::Publisher setpoint_pub_l2 = n.advertise<std_msgs::Float64>("left2_wheel_v", 1000);
+  ros::Publisher setpoint_pub_l3 = n.advertise<std_msgs::Float64>("left3_wheel_v", 1000);
+  ros::Publisher setpoint_pub_r1 = n.advertise<std_msgs::Float64>("right1_wheel_v", 1000);
+  ros::Publisher setpoint_pub_r2 = n.advertise<std_msgs::Float64>("right2_wheel_v", 1000);
+  ros::Publisher setpoint_pub_r3 = n.advertise<std_msgs::Float64>("right3_wheel_v", 1000);
+  ros::Publisher setpoint_pub = n.advertise<pid::wheel_vel>("wheel_v", 1000);
+
+  ros::Rate loop_rate(20);  
   while (ros::ok())
   {
-    ros::spinOnce();
 
-    setpoint_pub_v.publish(left_wheel_v);  
-    setpoint_pub_w.publish(right_wheel_v);
+    setpoint_pub_l1.publish(left1_wheel_v);  
+    setpoint_pub_l2.publish(left2_wheel_v);  
+    setpoint_pub_l3.publish(left3_wheel_v);  
+    setpoint_pub_r1.publish(right1_wheel_v);
+    setpoint_pub_r2.publish(right2_wheel_v);
+    setpoint_pub_r3.publish(right3_wheel_v);
+    setpoint_pub.publish(wheel_v);
 
-   // ros::spin();
     ros::spinOnce();
     loop_rate.sleep();
   }

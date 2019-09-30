@@ -1,0 +1,57 @@
+<launch>
+
+  <arg name="x" default   = "2.0" />
+  <arg name="y" default   = "5.0" />
+  <arg name="z" default   = "0.15" />
+  <arg name="yaw" default = "0.0" />
+
+  <!-- Setup controllers -->
+  <!-- rosparam file="$(find fetch_gazebo)/param/freight_controllers.yaml" command="load" / -->
+
+  <!-- URDF and TF support -->
+  <param name="robot_description" textfile="$(find mrobot_description)/urdf/urobot.urdf" />
+  <!-- Put a robot in gazebo, make it look pretty -->
+  <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" 
+        args="-urdf -x $(arg x) -y $(arg y) -z $(arg z) -Y $(arg yaw) -model xbot-u -param robot_description"/>
+
+  <!--node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+    <param name="use_gui" value="false"/>
+  </node-->
+
+  <!--Load the joint controllers to param server-->
+  <rosparam file="$(find mrobot_description)/param/xbot-u_control.yaml" command="load"/>
+
+  <!--Load controllers-->
+  <node name="spawner" pkg="controller_manager" type="spawner" respawn="false"
+    output="screen" ns="/xbot" args="joint_state_controller
+	left_wheel_velocity_controller
+	right_wheel_velocity_controller
+	articulate_controller
+    "/>  <!--mobile_base_controller-->
+
+
+  <!-- convert joint states to TF transforms for rviz, etc -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" ns="/xbot" respawn="false" output="screen">
+    <param name="publish_frequency" type="double" value="100"/>
+  </node>
+
+  <!--启动左右轮转速的控制器-->
+  <node name="wheel_velocity_transform" pkg="pid" type="transform_output" output="screen">
+      <remap from="right1_wheel_v" to="xbot/right1_wheel_velocity_controller/command"/>
+      <remap from="right2_wheel_v" to="xbot/right2_wheel_velocity_controller/command"/>
+      <remap from="right3_wheel_v" to="xbot/right3_wheel_velocity_controller/command"/>
+      <remap from="left1_wheel_v" to="xbot/left1_wheel_velocity_controller/command"/>
+      <remap from="left2_wheel_v" to="xbot/left2_wheel_velocity_controller/command"/>
+      <remap from="left3_wheel_v" to="xbot/left3_wheel_velocity_controller/command"/>
+  </node>
+
+
+
+  <!-- To make the interface of simulation identical to real XBot -->
+  <node pkg="nodelet" type="nodelet" name="mobile_base_nodelet_manager" args="manager"/>
+  <node pkg="nodelet" type="nodelet" name="cmd_vel_mux"  args="load yocs_cmd_vel_mux/CmdVelMuxNodelet mobile_base_nodelet_manager">
+    <param name="yaml_cfg_file" value="$(find mrobot_description)/param/mux.yaml"/>
+    <remap from="cmd_vel_mux/output/cmd_vel" to="cmd_vel_for_control"/>
+  </node>
+  <!--<node pkg="pid" type="odom_pub" name="odom_pub" output="log" />-->
+</launch>

@@ -636,25 +636,25 @@
 
   <!--Transmission and actuators-->
   <transmission name="leftwheel_tran1">
-    <type>transmission_interface/SimpleTransmission</type>
-    <joint name="leftfrontwheel_to_frontbase">
+	<type>transmission_interface/SimpleTransmission</type>
+	<joint name="leftfrontwheel_to_frontbase">
 	<hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
-    </joint>
-    <actuator name="left_wheel_motor1">
-      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
-      <mechanicalReduction>1</mechanicalReduction>
-    </actuator>
+	</joint>
+	<actuator name="left_wheel_motor1">
+	  <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+	  <mechanicalReduction>1</mechanicalReduction>
+	</actuator>
   </transmission>
 
   <transmission name="leftwheel_tran2">
-    <type>transmission_interface/SimpleTransmission</type>
-    <joint name="rightfrontwheel_to_frontbase">
+	<type>transmission_interface/SimpleTransmission</type>
+	<joint name="rightfrontwheel_to_frontbase">
 	<hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
-    </joint>
-    <actuator name="left_wheel_motor2">
-      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
-      <mechanicalReduction>1</mechanicalReduction>
-    </actuator>
+	</joint>
+	<actuator name="left_wheel_motor2">
+	  <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+	  <mechanicalReduction>1</mechanicalReduction>
+	</actuator>
   </transmission>
 
   <transmission name="articulate_trassmission">
@@ -664,7 +664,7 @@
     </joint>
   <actuator name="articulate_motor">
       <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
-      <mechanicalReduction>1</mechanicalReduction>
+      <mechanicalReduction>10</mechanicalReduction>
     </actuator>
   </transmission>
 

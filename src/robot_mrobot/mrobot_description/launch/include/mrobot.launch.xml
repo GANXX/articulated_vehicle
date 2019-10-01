@@ -36,11 +36,11 @@
   </node>
 
   <!--启动左右轮转速的控制器-->
-  <node name="wheel_velocity_transform" pkg="pid" type="transform_output" output="screen">
-      <remap from="right_wheel_v" to="xbot/right_wheel_velocity_controller/command"/>
-      <remap from="left_wheel_v" to="xbot/left_wheel_velocity_controller/command"/>
-      <remap from="articulate_v" to="xbot/articulate_controller/command"/>
-  </node>
+  <!--<node name="wheel_velocity_transform" pkg="pid" type="transform_output" output="screen">-->
+	  <!--<remap from="right_wheel_v" to="xbot/right_wheel_velocity_controller/command"/>-->
+	  <!--<remap from="left_wheel_v" to="xbot/left_wheel_velocity_controller/command"/>-->
+	  <!--<remap from="articulate_v" to="xbot/articulate_controller/command"/>-->
+  <!--</node>-->
 
 
 

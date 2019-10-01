@@ -17,7 +17,7 @@ xbot:
   articulate_controller:
     type: velocity_controllers/JointVelocityController
     joint: behindbase_to_frontbase
-    pid: {p: 10, i: 20, d: 0}
+    pid: {p: 100, i: 20, d: 0}
 
 
   # mobile_base_controller:

@@ -37,12 +37,9 @@
 
   <!--启动左右轮转速的控制器-->
   <node name="wheel_velocity_transform" pkg="pid" type="transform_output" output="screen">
-      <remap from="right1_wheel_v" to="xbot/right1_wheel_velocity_controller/command"/>
-      <remap from="right2_wheel_v" to="xbot/right2_wheel_velocity_controller/command"/>
-      <remap from="right3_wheel_v" to="xbot/right3_wheel_velocity_controller/command"/>
-      <remap from="left1_wheel_v" to="xbot/left1_wheel_velocity_controller/command"/>
-      <remap from="left2_wheel_v" to="xbot/left2_wheel_velocity_controller/command"/>
-      <remap from="left3_wheel_v" to="xbot/left3_wheel_velocity_controller/command"/>
+      <remap from="right_wheel_v" to="xbot/right_wheel_velocity_controller/command"/>
+      <remap from="left_wheel_v" to="xbot/left_wheel_velocity_controller/command"/>
+      <remap from="articulate_v" to="xbot/articulate_controller/command"/>
   </node>
 
 

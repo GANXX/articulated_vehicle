@@ -276,7 +276,7 @@
     <limit
       lower="-0.698"
       upper="0.698"
-      effort="10000"
+      effort="10000000"
       velocity="0.1396" />
   </joint>
   <link
@@ -608,27 +608,27 @@
   </gazebo>
 
   <gazebo reference="leftfrontwheel_Link">
-    <mu>0.6</mu>
-    <mu2>0.6</mu2>
+    <mu>0.3</mu>
+    <mu2>0.3</mu2>
     <kp>100000000.0</kp>
     <kd>10000.0</kd>    
   </gazebo>
   <gazebo reference="rightfrontwheel_Link">
-    <mu>0.6</mu>
-    <mu2>0.6</mu2>
+    <mu>0.3</mu>
+    <mu2>0.3</mu2>
     <kp>100000000.0</kp>
     <kd>10000.0</kd>    
   </gazebo>
   <gazebo reference="leftbehindwheel_Link">
-    <mu>0.6</mu>
-    <mu2>0.6</mu2>
+    <mu>0.3</mu>
+    <mu2>0.3</mu2>
     <kp>100000000.0</kp>
     <kd>10000.0</kd>    
   </gazebo>
 
   <gazebo reference="rightbehindwheel_Link">
-    <mu>0.6</mu>
-    <mu2>0.6</mu2>
+    <mu>0.3</mu>
+    <mu2>0.3</mu2>
     <kp>100000000.0</kp>
     <kd>10000.0</kd>    
   </gazebo>

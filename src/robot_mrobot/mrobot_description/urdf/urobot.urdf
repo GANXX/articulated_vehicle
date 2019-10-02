@@ -447,60 +447,6 @@
     <axis
       xyz="0 0 0" />
   </joint>
-  <link
-    name="gps_Link">
-    <inertial>
-      <origin
-        xyz="0 3.27121061795215E-19 0.0130186828614431"
-        rpy="0 0 0" />
-      <mass
-        value="0.884541453056413" />
-      <inertia
-        ixx="0.00132579849810967"
-        ixy="1.61317190778527E-34"
-        ixz="-1.28983914639267E-19"
-        iyy="0.00132579849810967"
-        iyz="-2.80298504130704E-19"
-        izz="0.00155644116872113" />
-    </inertial>
-    <visual>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-          filename="package://mrobot_description/models/meshes/gps_Link.STL" />
-      </geometry>
-      <material
-        name="">
-        <color
-          rgba="0.698039215686274 0.698039215686274 0.698039215686274 1" />
-      </material>
-    </visual>
-    <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-	    filename="package://mrobot_description/models/meshes/gps_Link.STL" />
-      </geometry>
-    </collision>
-  </link>
-  <joint
-    name="gps_to_base"
-    type="fixed">
-    <origin
-      xyz="-1.018 0 0.2798"
-      rpy="0 0 0" />
-    <parent
-      link="base_link" />
-    <child
-      link="gps_Link" />
-    <axis
-      xyz="0 0 0" />
-  </joint>
-
 <!--gazebo 配置文件-->
         <!--<gazebo reference="laser360_Link">-->
             <!--<sensor type="ray" name="rplidar">-->

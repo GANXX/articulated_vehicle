@@ -398,7 +398,7 @@
     name="laser360_Link">
     <inertial>
       <origin
-        xyz="-1.11022302462516E-16 -1.57772181044202E-30 1"
+        xyz="-1.11022302462516E-16 -1.57772181044202E-30 0"
         rpy="0 0 0" />
       <mass
         value="0.637680476825656" />
@@ -438,10 +438,10 @@
     name="laser360_to_base"
     type="fixed">
     <origin
-      xyz="-0.728241888910018 0 0.533000000000001"
+      xyz="-1.7 0 2.410"
       rpy="0 0 0" />
     <parent
-      link="base_link" />
+      link="behindbase_Link" />
     <child
       link="laser360_Link" />
     <axis

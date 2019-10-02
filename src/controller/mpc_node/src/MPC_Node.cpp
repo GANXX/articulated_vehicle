@@ -30,6 +30,7 @@
 #include <tf/transform_datatypes.h>
 #include <nav_msgs/Path.h>
 #include <nav_msgs/Odometry.h>
+#include <sensor_msgs/JointState.h>
 #include <visualization_msgs/Marker.h>
 
 #include "MPC.h"
@@ -57,7 +58,7 @@ class MPCNode
         
     private:
         ros::NodeHandle _nh;
-        ros::Subscriber _sub_odom, _sub_path, _sub_goal;
+        ros::Subscriber _sub_odom, _sub_path, _sub_goal, _sub_articulate_angle;
         ros::Publisher _pub_odompath, _pub_twist, _pub_mpctraj;
         ros::Timer _timer1;
 		ros::Time current_time, after_time, data_using_time;
@@ -76,14 +77,17 @@ class MPCNode
         string _globalPath_topic, _goal_topic;
         string _map_frame, _odom_frame, _car_frame;
 
+
         MPC _mpc;
         map<string, double> _mpc_params;
         double _mpc_steps, _ref_cte, _ref_epsi, _ref_vel, _w_cte, _w_epsi, _w_vel, 
-               _w_delta, _w_accel, _w_delta_d, _w_accel_d, _max_steering, _max_throttle, _bound_value;
+               _w_delta, _w_accel, _w_delta_d, _w_accel_d, _max_steering, _max_throttle, _max_gama,  _bound_value;
 
-        double _Lf, _dt, _steering, _throttle, _speed, _max_speed;
+        double _Lf, _Lr, _dt, _steering, _throttle, _speed, _max_speed;
         double _pathLength, _goalRadius ;
 		double _waypointsDist = 0;
+		double articulate_angle;
+        double d_articulate_angle; 
         int _controller_freq, _downSampling, _thread_numbers;
         bool _goal_received, _goal_reached, _path_computed, _pub_twist_flag, _debug_info, _delay_mode;
 		bool isrecord_reference_path = false;
@@ -95,6 +99,7 @@ class MPCNode
         void odomCB(const nav_msgs::Odometry::ConstPtr& odomMsg);
         void pathCB(const nav_msgs::Path::ConstPtr& pathMsg);
         void goalCB(const geometry_msgs::PoseStamped::ConstPtr& goalMsg);
+		void getArticulateAngleCB(const sensor_msgs::JointState::ConstPtr& msg);
         void controlLoopCB();
         //void controlLoopCB(const ros::TimerEvent&);
         void dynamicCB(mpc_node::mpc_dynamicConfig &config, uint32_t level);
@@ -118,7 +123,8 @@ MPCNode::MPCNode()
     pn.param("path_length", _pathLength, 8.0); // unit: m
     pn.param("goal_radius", _goalRadius, 0.5); // unit: m
     pn.param("controller_freq", _controller_freq, 10);
-    pn.param("vehicle_Lf", _Lf, 0.25); // distance between the front of the vehicle and its center of gravity
+    pn.param("vehicle_Lf", _Lf, 1.5); // distance between the front of the vehicle and its center of gravity
+    pn.param("vehicle_Lr", _Lr, 1.49); // distance between the front of the vehicle and its center of gravity
     _dt = double(1.0/_controller_freq); // time step duration dt in s 
 
     //Parameter for MPC solver
@@ -133,8 +139,9 @@ MPCNode::MPCNode()
     pn.param("mpc_w_accel", _w_accel, 50.0);
     pn.param("mpc_w_delta_d", _w_delta_d, 0.0);
     pn.param("mpc_w_accel_d", _w_accel_d, 0.0);
-    pn.param("mpc_max_steering", _max_steering, 0.523); // Maximal steering radian (~30 deg)
+    pn.param("mpc_max_steering", _max_steering, 0.139); // Maximal steering radian (~30 deg)
     pn.param("mpc_max_throttle", _max_throttle, 1.0); // Maximal throttle accel
+    pn.param("mpc_max_gama", _max_gama, 0.7); // Maximal throttle accel
     pn.param("mpc_bound_value", _bound_value, 1.0e3); // Bound value for other variables
 
     //Parameter for topics & Frame name
@@ -150,6 +157,7 @@ MPCNode::MPCNode()
     cout << "debug_info: "  << _debug_info << endl;
     cout << "delay_mode: "  << _delay_mode << endl;
     cout << "vehicle_Lf: "  << _Lf << endl;
+    cout << "vehicle_Lr: "  << _Lr << endl;
     cout << "frequency: "   << _dt << endl;
     cout << "mpc_steps: "   << _mpc_steps << endl;
     cout << "mpc_ref_vel: " << _ref_vel << endl;
@@ -161,6 +169,7 @@ MPCNode::MPCNode()
     _sub_odom   = _nh.subscribe("/odom", 1, &MPCNode::odomCB, this);
     _sub_path   = _nh.subscribe( _globalPath_topic, 1, &MPCNode::pathCB, this);
     _sub_goal   = _nh.subscribe( _goal_topic, 1, &MPCNode::goalCB, this);
+    _sub_articulate_angle   = _nh.subscribe( "/xbot/joint_states", 100, &MPCNode::getArticulateAngleCB, this);
     _pub_odompath  = _nh.advertise<nav_msgs::Path>("/mpc_reference", 1); // reference path for MPC 
     _pub_mpctraj   = _nh.advertise<nav_msgs::Path>("/mpc_trajectory", 1);// MPC trajectory output
     if(_pub_twist_flag)
@@ -191,6 +200,7 @@ MPCNode::MPCNode()
     //Init parameters for MPC object
     _mpc_params["DT"] = _dt;
     _mpc_params["LF"] = _Lf;
+    _mpc_params["Lr"] = _Lr;
     _mpc_params["STEPS"]    = _mpc_steps;
     _mpc_params["REF_CTE"]  = _ref_cte;
     _mpc_params["REF_EPSI"] = _ref_epsi;
@@ -204,6 +214,7 @@ MPCNode::MPCNode()
     _mpc_params["W_DA"]     = _w_accel_d;
     _mpc_params["MAXSTR"]   = _max_steering;
     _mpc_params["MAXTHR"]   = _max_throttle;
+    _mpc_params["MAXGAMA"]   = _max_gama;
     _mpc_params["BOUND"]    = _bound_value;
     _mpc.LoadParams(_mpc_params); //把MPC_Node中参数信息通过_mpc_params传送到MPC.cpp中
 	
@@ -316,6 +327,7 @@ void MPCNode::dynamicCB(mpc_node::mpc_dynamicConfig &config, uint32_t level){
     _w_accel_d    = config.mpc_w_accel_d;
     _max_steering = config.mpc_max_steering;
     _max_throttle = config.mpc_max_throttle;
+    _max_gama = config.mpc_max_gama;
    
     _mpc_params["STEPS"]    = _mpc_steps;
     _mpc_params["REF_CTE"]  = _ref_cte;
@@ -330,6 +342,7 @@ void MPCNode::dynamicCB(mpc_node::mpc_dynamicConfig &config, uint32_t level){
     _mpc_params["W_DA"]     = _w_accel_d;
     _mpc_params["MAXSTR"]   = _max_steering;
     _mpc_params["MAXTHR"]   = _max_throttle;
+    _mpc_params["MAXGAMA"]   = _max_gama;
     _mpc_params["BOUND"]    = _bound_value;
     _mpc.LoadParams(_mpc_params); //把MPC_Node中参数信息通过_mpc_params传送到MPC.cpp中
 }
@@ -430,6 +443,19 @@ void MPCNode::pathCB(const nav_msgs::Path::ConstPtr& pathMsg)
    }
 }
 
+
+void MPCNode::getArticulateAngleCB(const sensor_msgs::JointState::ConstPtr& msg){
+   int modelConst = msg->name.size();
+   for(int i =0; i<modelConst; ++i){
+	  if(msg->name[i]=="behindbase_to_frontbase"){
+		 articulate_angle = msg->position[i];
+		 d_articulate_angle = msg->velocity[i];
+		 break;
+	  }
+   }
+
+}
+
 // CallBack: Update goal status
 void MPCNode::goalCB(const geometry_msgs::PoseStamped::ConstPtr& goalMsg)
 {
@@ -504,6 +530,7 @@ void MPCNode::controlLoopCB()
         const double throttle = _throttle; // accel: >0; brake: <0
         const double dt = _dt;
         const double Lf = _Lf;
+        const double Lr = _Lr;
 
         // Waypoints related parameters
         const int N = map_path.poses.size(); // Number of waypoints
@@ -538,9 +565,12 @@ void MPCNode::controlLoopCB()
 		// 计算三次样条曲线
         auto coeffs = polyfit(x_veh, y_veh, 3); 
 
+		const double gama = articulate_angle;
+		//const double gama_d = d_articulate_angle;
         const double cte  = polyeval(coeffs, 0.0);
         const double epsi = atan(coeffs[1]);
-        VectorXd state(6);
+        VectorXd state(7);
+		/************这块先不进行铰接车改造*****************/
         if(_delay_mode)  //delay_mode默认是true 但是不知道指代的是什么
         {
             // Kinematic model is used to predict vehicle state at the actual
@@ -556,7 +586,7 @@ void MPCNode::controlLoopCB()
         }
         else
         {
-            state << 0, 0, 0, v, cte, epsi;
+            state << 0, 0, 0, v, gama, cte, epsi;
         }
         
         // Solve MPC Problem

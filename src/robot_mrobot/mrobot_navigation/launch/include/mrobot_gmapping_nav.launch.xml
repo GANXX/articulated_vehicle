@@ -41,5 +41,5 @@
     <remap from="map" to="gmapping_map"/>
   </node>
 
-    <node name="map_server" pkg="map_server" type="map_server" args="$(find mrobot_navigation)/maps/test_house.yaml"/>
+    <node name="map_server" pkg="map_server" type="map_server" args="$(find mrobot_navigation)/maps/Spath_map.yaml"/>
 </launch>

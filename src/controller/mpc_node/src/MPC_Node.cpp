@@ -379,8 +379,14 @@ void MPCNode::pathCycle(nav_msgs::Path *pathMsg){
             int sampling = _downSampling;  
 			int predict_sample=10;
 			int i=0;
-			if(pathMsg->poses.size()<=predict_sample) i = 0;
-			else i=predict_sample;
+			   if(pathMsg->poses.size()<=predict_sample) {
+				  i = 0;
+			   }
+			   else{
+				  const double v = _odom.twist.twist.linear.x;
+				  i = predict_sample;
+				  //cout<<"i\t"<<i<<endl;
+			   } 
             // Cut and downsampling the path
 			while(map_path.poses.size()<10)
             {

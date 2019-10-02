@@ -119,20 +119,25 @@ class FG_eval
               fg[0] += _w_cte * CppAD::pow(vars[_cte_start + i] - _ref_cte, 2); // cross deviation error 偏差值的加权量
               fg[0] += _w_epsi * CppAD::pow(vars[_epsi_start + i] - _ref_epsi, 2); // heading error 航向误差的加权量
               fg[0] += _w_vel * CppAD::pow(vars[_v_start + i] - _ref_vel, 2); // speed error  与预期速度的加权量
+			  if(i<_mpc_steps-1){
+              //fg[0] += _w_delta_d * CppAD::pow(vars[_delta_start + i + 1] - vars[_delta_start + i], 2);
+              //fg[0] += _w_accel_d * CppAD::pow(vars[_a_start + i + 1] - vars[_a_start + i], 2);
+			  }
+
             }
 
             // Minimize the use of actuators.
 			// 执行机构也做了相应的加权量
-            for (int i = 0; i < _mpc_steps - 1; i++) {
-              fg[0] += _w_delta * CppAD::pow(vars[_delta_start + i], 2); //对转角的加权量
-              fg[0] += _w_accel * CppAD::pow(vars[_a_start + i], 2);     //对加速度的加权量
-            }
+            //for (int i = 0; i < _mpc_steps - 1; i++) {
+              //fg[0] += _w_delta * CppAD::pow(vars[_delta_start + i], 2); //对转角的加权量
+              //fg[0] += _w_accel * CppAD::pow(vars[_a_start + i], 2);     //对加速度的加权量
+            //}
 
             // Minimize the value gap between sequential actuations.最大限度地减少顺序启动之间的价值差距。
-            for (int i = 0; i < _mpc_steps - 2; i++) {
+            //for (int i = 0; i < _mpc_steps - 2; i++) {
               //fg[0] += _w_delta_d * CppAD::pow(vars[_delta_start + i + 1] - vars[_delta_start + i], 2);
               //fg[0] += _w_accel_d * CppAD::pow(vars[_a_start + i + 1] - vars[_a_start + i], 2);
-            }
+            //}
             /*************************/
 
             // fg[x] for constraints
@@ -176,15 +181,17 @@ class FG_eval
 				//所以f0-y0就是车辆的位置偏差值
 				//同理psides0是f0的导数,也就是车辆的航向角的tan值
 				//coeffs产生的样条曲线是以baselink为坐标系的,所以x一直是车辆的行驶方向
+				AD<double> yumiao_dis = x0 +0.2;
+				if(i ==0) 
                 for (int i = 0; i < coeffs.size(); i++) 
                 {
-                    f0 += coeffs[i] * CppAD::pow(x0, i);
-					//cout<<"f0\t"<<f0<<"x0\t"<<x0<<endl;
+                    f0 += coeffs[i] * CppAD::pow(yumiao_dis, i);
+					//cout<<"f0\t"<<f0<<"yumiao_dis\t"<<yumiao_dis<<endl;
                 }
                 AD<double> psides0 = 0.0;
                 for (int i = 1; i < coeffs.size(); i++) 
                 {
-                    psides0 += i*coeffs[i] * CppAD::pow(x0, i-1); // f'(x0)
+                    psides0 += i*coeffs[i] * CppAD::pow(yumiao_dis, i-1); // f'(yumiao_dis)
                 }
                 psides0 = CppAD::atan(psides0);
 

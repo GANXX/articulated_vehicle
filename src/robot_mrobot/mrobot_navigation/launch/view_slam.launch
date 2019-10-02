@@ -1,6 +1,11 @@
-<!--
-  Used for visualising the xbot-u while building a map or navigating with the ros navistack.
- -->
+<?xml version="1.0"?>
 <launch>
+  <arg name="map_file" default="$(find mrobot_navigation)/maps/Spath.yaml"/>
+  <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
+  <node pkg="pid" type="odom_pub" name="odom_pub"> 
+    <param name="/use_sim_time" value="true" />
+  </node>
+   <node pkg="tf" type="static_transform_publisher" name="static_map_odom" args="0 0 0 0 0 0 map odom 1000"/>
+ <include file="$(find mrobot_navigation)/launch/include/move_base_start.launch.xml"/>
   <node name="rviz" pkg="rviz" type="rviz" args="-d $(find mrobot_navigation)/rviz/slam.rviz"/>
 </launch>

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-   <node name="MPC_Node" pkg="mpc_node" type="MPC_Node" output="screen" launch-prefix="x-terminal-emulator -e gdb --args">
+   <node name="MPC_Node" pkg="mpc_node" type="MPC_Node" output="screen">
     <remap from="cmd_vel" to="/cmd_vel_mux/input/navi"/>
 	 <rosparam file="$(find mpc_node)/params/mpc/mpc_params.yaml" command="load"/>
   </node>

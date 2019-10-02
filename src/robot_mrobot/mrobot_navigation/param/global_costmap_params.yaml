@@ -1,7 +1,7 @@
 global_costmap:
    global_frame: /map
    robot_base_frame: /base_footprint
-   update_frequency: 1.0
+   update_frequency: 0.9
   #  2.0
    publish_frequency: 0.5
    static_map: true
@@ -9,11 +9,11 @@ global_costmap:
    transform_tolerance: 0.5
    plugins:
      - {name: static_layer,            type: "costmap_2d::StaticLayer"}
-     - {name: Voxel_Layer,          type: "costmap_2d::VoxelLayer"}
+     - {name: obstacle_layer,          type: "costmap_2d::ObstacleLayer"}
      - {name: inflation_layer,         type: "costmap_2d::InflationLayer"} 
    # 以下内容为后补充
   #  Voxel_Layer:
   #     observation_sources: scan
   #     scan: {data_type: LaserScan, topic: /scan, marking: true, clearing: true, expected_update_rate: 0}
-   inflation_layer:
-      inflation_radius: 1.8
+   #inflation_layer:
+      #inflation_radius: 100

@@ -7,6 +7,8 @@ Panels:
         - /Global Options1
         - /TF1
         - /TF1/Frames1
+        - /TF1/Frames1/behindbase_Link1
+        - /TF1/Frames1/behindbase_Link1/Relative Position1
         - /TF1/Tree1
         - /Global Map1
         - /Global Map1/Costmap1
@@ -18,7 +20,7 @@ Panels:
         - /Pose1
         - /Axes1
       Splitter Ratio: 0.605985045
-    Tree Height: 738
+    Tree Height: 733
   - Class: rviz/Selection
     Name: Selection
   - Class: rviz/Tool Properties
@@ -64,33 +66,122 @@ Visualization Manager:
     - Alpha: 1
       Class: rviz/RobotModel
       Collision Enabled: false
-      Enabled: false
+      Enabled: true
       Links:
         All Links Enabled: true
         Expand Joint Details: false
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
+        base_footprint:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        behindbase_Link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        bucket_Link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        frontbase_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        laser360_Link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        leftbehindwheel_Link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        leftfrontwheel_Link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        rightbehindwheel_Link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        rightfrontwheel_Link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
       Name: RobotModel
       Robot Description: robot_description
       TF Prefix: ""
       Update Interval: 0
-      Value: false
+      Value: true
       Visual Enabled: true
     - Class: rviz/TF
-      Enabled: false
+      Enabled: true
       Frame Timeout: 15
       Frames:
         All Enabled: false
+        base_footprint:
+          Value: false
+        base_link:
+          Value: false
+        behindbase_Link:
+          Value: true
+        bucket_Link:
+          Value: false
+        frontbase_link:
+          Value: true
+        laser360_Link:
+          Value: false
+        leftbehindwheel_Link:
+          Value: false
+        leftfrontwheel_Link:
+          Value: false
+        map:
+          Value: false
+        odom:
+          Value: false
+        rightbehindwheel_Link:
+          Value: false
+        rightfrontwheel_Link:
+          Value: false
       Marker Scale: 1
       Name: TF
       Show Arrows: true
       Show Axes: true
       Show Names: false
       Tree:
-        {}
+        map:
+          odom:
+            base_footprint:
+              base_link:
+                frontbase_link:
+                  behindbase_Link:
+                    laser360_Link:
+                      {}
+                    leftbehindwheel_Link:
+                      {}
+                    rightbehindwheel_Link:
+                      {}
+                  bucket_Link:
+                    {}
+                  leftfrontwheel_Link:
+                    {}
+                  rightfrontwheel_Link:
+                    {}
       Update Interval: 0
-      Value: false
+      Value: true
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
@@ -434,12 +525,12 @@ Visualization Manager:
       Unreliable: false
       Value: false
     - Class: rviz/Axes
-      Enabled: true
+      Enabled: false
       Length: 1
       Name: Axes
       Radius: 0.100000001
       Reference Frame: base_footprint
-      Value: true
+      Value: false
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -464,33 +555,33 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 11.3435345
+      Distance: 0.1119067
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 15.2749786
-        Y: 0.747392297
-        Z: 13.4139214
+        X: -45.7570496
+        Y: -50.4696236
+        Z: 6.17298317
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.0500000007
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 1.50979578
+      Pitch: 0.634796977
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 3.73000383
+      Yaw: 4.85501003
     Saved: ~
 Window Geometry:
   Displays:
-    collapsed: true
-  Height: 966
-  Hide Left Dock: true
+    collapsed: false
+  Height: 961
+  Hide Left Dock: false
   Hide Right Dock: true
-  QMainWindow State: 000000ff00000000fd0000000400000000000001a000000377fc0200000005fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000006300fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073000000002e00000377000000dd00ffffff00000001000001d500000386fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000002b00000386000000b700fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000004a00000003efc0100000002fb0000000800540069006d00650000000000000004a00000038300fffffffb0000000800540069006d006501000000000000045000000000000000000000042c0000037700000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd0000000400000000000001a000000372fc0200000005fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000006300fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000002e00000372000000dd00ffffff00000001000001d500000386fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000002b00000386000000b700fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000004a00000003efc0100000002fb0000000800540069006d00650000000000000004a00000038300fffffffb0000000800540069006d00650100000000000004500000000000000000000002850000037200000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Selection:
     collapsed: false
   Time:

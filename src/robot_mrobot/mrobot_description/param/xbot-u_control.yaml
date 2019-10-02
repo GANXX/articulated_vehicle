@@ -14,6 +14,16 @@ xbot:
     joint: rightfrontwheel_to_frontbase
     pid: {p: 10, i: 20, d: 0}
 
+  left_behind_wheel_velocity_controller:
+    type: velocity_controllers/JointVelocityController
+    joint: leftbehindwheel_to_behindbase
+    pid: {p: 10, i: 20, d: 0}
+
+  right_behind_wheel_velocity_controller:
+    type: velocity_controllers/JointVelocityController
+    joint: rightbehindwheel_to_behindbase
+    pid: {p: 10, i: 20, d: 0}
+
   articulate_controller:
     type: velocity_controllers/JointVelocityController
     joint: behindbase_to_frontbase

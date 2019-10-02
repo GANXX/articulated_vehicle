@@ -321,7 +321,7 @@
   </link>
   <joint
     name="leftbehindwheel_to_behindbase"
-    type="continuous">
+    type="fixed">
     <origin
       xyz="-1.467 0.436 -0.835"
       rpy="1.7384E-17 0.12873 -3.1416" />
@@ -329,11 +329,6 @@
       link="behindbase_Link" />
     <child
       link="leftbehindwheel_Link" />
-    <axis
-      xyz="0 -1 0" />
-    <limit
-      effort="10000"
-      velocity="200" />
   </joint>
   <link
     name="rightbehindwheel_Link">
@@ -377,7 +372,7 @@
   </link>
   <joint
     name="rightbehindwheel_to_behindbase"
-    type="continuous">
+    type="fixed">
     <origin
       xyz="-1.467 -0.436 -0.835"
       rpy="-3.1416 -0.9242 3.1416" />
@@ -385,11 +380,6 @@
       link="behindbase_Link" />
     <child
       link="rightbehindwheel_Link" />
-    <axis
-      xyz="0 1 0" />
-    <limit
-      effort="10000"
-      velocity="200" />
   </joint>
 
 
@@ -581,79 +571,23 @@
 
 
   <!--Transmission and actuators-->
-  <transmission name="wheel_tran1">
+  <transmission name="leftwheel_tran1">
 	<type>transmission_interface/SimpleTransmission</type>
 	<joint name="leftfrontwheel_to_frontbase">
 	<hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
 	</joint>
-	<actuator name="wheel_motor1">
+	<actuator name="left_wheel_motor1">
 	  <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
 	  <mechanicalReduction>1</mechanicalReduction>
 	</actuator>
   </transmission>
 
-  <transmission name="wheel_tran2">
+  <transmission name="leftwheel_tran2">
 	<type>transmission_interface/SimpleTransmission</type>
 	<joint name="rightfrontwheel_to_frontbase">
 	<hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
 	</joint>
-	<actuator name="wheel_motor2">
-	  <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
-	  <mechanicalReduction>1</mechanicalReduction>
-	</actuator>
-  </transmission>
-  <transmission name="wheel_tran2">
-	<type>transmission_interface/SimpleTransmission</type>
-	<joint name="rightfrontwheel_to_frontbase">
-	<hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
-	</joint>
-	<actuator name="wheel_motor2">
-	  <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
-	  <mechanicalReduction>1</mechanicalReduction>
-	</actuator>
-  </transmission>
-
-
-
-  <transmission name="wheel_tran3">
-	<type>transmission_interface/SimpleTransmission</type>
-	<joint name="rightbehindwheel_to_behindbase">
-	<hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
-	</joint>
-	<actuator name="wheel_motor3">
-	  <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
-	  <mechanicalReduction>1</mechanicalReduction>
-	</actuator>
-  </transmission>
-  <transmission name="wheel_tran3">
-	<type>transmission_interface/SimpleTransmission</type>
-	<joint name="rightbehindwheel_to_behindbase">
-	<hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
-	</joint>
-	<actuator name="wheel_motor3">
-	  <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
-	  <mechanicalReduction>1</mechanicalReduction>
-	</actuator>
-  </transmission>
-
-
-
-  <transmission name="wheel_tran4">
-	<type>transmission_interface/SimpleTransmission</type>
-	<joint name="leftbehindwheel_to_behindbase">
-	<hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
-	</joint>
-	<actuator name="wheel_motor4">
-	  <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
-	  <mechanicalReduction>1</mechanicalReduction>
-	</actuator>
-  </transmission>
-  <transmission name="wheel_tran4">
-	<type>transmission_interface/SimpleTransmission</type>
-	<joint name="leftbehindwheel_to_behindbase">
-	<hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
-	</joint>
-	<actuator name="wheel_motor4">
+	<actuator name="left_wheel_motor2">
 	  <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
 	  <mechanicalReduction>1</mechanicalReduction>
 	</actuator>

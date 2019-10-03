@@ -59,19 +59,24 @@ class MPCNode
     private:
         ros::NodeHandle _nh;
         ros::Subscriber _sub_odom, _sub_path, _sub_goal, _sub_articulate_angle;
-        ros::Publisher _pub_odompath, _pub_twist, _pub_mpctraj;
+        ros::Publisher _pub_odompath, _pub_polyfitpath, _pub_twist, _pub_mpctraj;
         ros::Timer _timer1;
 		ros::Time current_time, after_time, data_using_time;
 		tf::TransformListener listener;
-	    Recorder etc_data;
-		Recorder calculate_time;
-		Recorder epsi_data;
+		//记录数据初始化对象
+	    Recorder etc_data;      //横向偏差
+		Recorder calculate_time;//计算时间
+		Recorder epsi_data;     //航向角偏差
+		Recorder velocity_data; //纵向速度变化
+		Recorder aac_data;      //加速度变化
+		Recorder gama_data;     //铰接角度变化
+		Recorder gama_d_data;   //铰接角速度变化
 		Recorder car_path;
 		Recorder reference_path;
 
         geometry_msgs::Point _goal_pos;
         nav_msgs::Odometry _odom;
-        nav_msgs::Path _map_path, _mpc_traj, movebase_path; 
+        nav_msgs::Path _map_path, _mpc_traj,_mpc_polyfitpath, movebase_path; 
         geometry_msgs::Twist _twist_msg;
 
         string _globalPath_topic, _goal_topic;
@@ -171,6 +176,7 @@ MPCNode::MPCNode()
     _sub_goal   = _nh.subscribe( _goal_topic, 1, &MPCNode::goalCB, this);
     _sub_articulate_angle   = _nh.subscribe( "/xbot/joint_states", 100, &MPCNode::getArticulateAngleCB, this);
     _pub_odompath  = _nh.advertise<nav_msgs::Path>("/mpc_reference", 1); // reference path for MPC 
+    _pub_polyfitpath  = _nh.advertise<nav_msgs::Path>("/mpc_polyfit", 1); // polyfit path for MPC 
     _pub_mpctraj   = _nh.advertise<nav_msgs::Path>("/mpc_trajectory", 1);// MPC trajectory output
     if(_pub_twist_flag)
         _pub_twist = _nh.advertise<geometry_msgs::Twist>("/cmd_vel", 1); //for stage (Ackermann msg non-supported)
@@ -196,6 +202,7 @@ MPCNode::MPCNode()
 	//这里应该是初始化操作,不知道这样做的意义何在
     _twist_msg = geometry_msgs::Twist();
     _mpc_traj = nav_msgs::Path();
+    _mpc_polyfitpath = nav_msgs::Path();
 
     //Init parameters for MPC object
     _mpc_params["DT"] = _dt;
@@ -355,7 +362,8 @@ void MPCNode::odomCB(const nav_msgs::Odometry::ConstPtr& odomMsg)
 bool MPCNode::clear_mappath(nav_msgs::Path *pathMsg, int min_i){
    if(ispathpointenough){
    int i =min_i*_downSampling;
-   pathMsg->poses.erase(pathMsg->poses.begin(),pathMsg->poses.begin()+i);
+   if(i-100>0)
+	  pathMsg->poses.erase(pathMsg->poses.begin(),pathMsg->poses.begin()+i-100);
    return true;
 	}
    else return false;
@@ -373,7 +381,7 @@ void MPCNode::pathCycle(nav_msgs::Path *pathMsg){
                 double dx = pathMsg->poses[1].pose.position.x - pathMsg->poses[0].pose.position.x;
                 double dy = pathMsg->poses[1].pose.position.y - pathMsg->poses[0].pose.position.y;
                 _waypointsDist = sqrt(dx*dx + dy*dy); //获取相邻点之间的路径的长度
-                _downSampling = int(_pathLength/10.0/_waypointsDist);
+                _downSampling = int(_pathLength/20.0/_waypointsDist);
             }
             double total_length = 0.0;
             int sampling = _downSampling;  
@@ -383,32 +391,28 @@ void MPCNode::pathCycle(nav_msgs::Path *pathMsg){
 				  i = 0;
 			   }
 			   else{
-				  const double v = _odom.twist.twist.linear.x;
-				  i = predict_sample;
-				  //cout<<"i\t"<<i<<endl;
+				  //i = predict_sample;
+				  i = 0;
 			   } 
             // Cut and downsampling the path
-			while(map_path.poses.size()<10)
+		    geometry_msgs::PoseStamped tempPose =geometry_msgs::PoseStamped();
+			while(map_path.poses.size()<20)
             {
                 if(total_length > _pathLength) //_pathLength＜0,那就直接退出
                     break;
 
                 if(sampling == _downSampling){   
-                    geometry_msgs::PoseStamped tempPose =pathMsg->poses[i];
-					//_odom_frame是目标坐标; pathMsg->pose是输入值,_map_frame是固定坐标; tempPose是输出值
-					//将path从map坐标转化成odom坐标这样在后面的controlLoopCB中就可以都采用odom坐标进行计算
-					//(我觉得这样是多此一举的 )
-					//_tf_listener.transformPose(_odom_frame, ros::Time(0) , pathMsg->poses[i], _map_frame, tempPose);                     
+                    tempPose =pathMsg->poses[i];
                     map_path.poses.push_back(tempPose);  
                     sampling = 0;
                 }
-                total_length = total_length + _waypointsDist;  //total_length 累加有什么用? 没看到用的地方
+                total_length = total_length + _waypointsDist;  
                 sampling = sampling + 1;  
 				i++;
 				if(i>=pathMsg->poses.size()) break;
             }
 
-            if(map_path.poses.size() > 6 )
+            if(map_path.poses.size() > 12 )
             {
 				_map_path = map_path; // Path waypoints in map frame
 				// publish odom path
@@ -418,8 +422,18 @@ void MPCNode::pathCycle(nav_msgs::Path *pathMsg){
 
             }
 			else{
-			    int sample_piont =map_path.poses.size();
-			    ROS_ERROR("Sample points less than 6, are %d",sample_piont);
+			    int sample_point =map_path.poses.size();
+				for(int i=sample_point;i<12;i++){
+				   tempPose.pose.position.x=tempPose.pose.position.x+0.5;
+				   map_path.poses.push_back(tempPose);
+
+				}
+				_map_path = map_path; // Path waypoints in map frame
+				// publish odom path
+				map_path.header.frame_id = _odom_frame;
+				map_path.header.stamp = ros::Time::now();
+				_pub_odompath.publish(map_path);
+				//ROS_ERROR("Sample points less than 6, are %d",sample_piont);
 				ispathpointenough = false;
 			}
             //DEBUG            
@@ -443,7 +457,8 @@ void MPCNode::pathCB(const nav_msgs::Path::ConstPtr& pathMsg)
    ispathpointenough = true;
    if(!isrecord_reference_path){
 	  for(int i=0;i<movebase_path.poses.size();i++){
-		 reference_path.recordbegin(movebase_path.poses[i].pose.position.x,movebase_path.poses[i].pose.position.y);
+		 reference_path.recordbegin(double(movebase_path.poses[i].pose.position.x),double(movebase_path.poses[i].pose.position.y));
+		 cout<<"path i :/t"<<i<<endl;
 	  }
 	  isrecord_reference_path = true;
    }
@@ -475,12 +490,20 @@ void MPCNode::goalCB(const geometry_msgs::PoseStamped::ConstPtr& goalMsg)
 	epsi_data.createFile("epsi_data");
 	car_path.createFile("car_path");
 	reference_path.createFile("reference_path");
+	velocity_data.createFile("velocity_data"); //纵向速度变化
+	aac_data.createFile("aac_data");      //加速度变化
+	gama_data.createFile("gama_data");     //铰接角度变化
+	gama_d_data.createFile("gama_d_data");   //铰接角速度变化
 	//初始化数据记录对象
 	etc_data.recordinit("etc_data");
 	epsi_data.recordinit("epsi_data");
 	calculate_time.recordinit("calculate_time");
 	car_path.recordinit("car_path");
 	reference_path.recordinit("reference_path");
+	velocity_data.recordinit("velocity_data"); //纵向速度变化
+	aac_data.recordinit("aac_data");      //加速度变化
+	gama_data.recordinit("gama_data");     //铰接角度变化
+	gama_d_data.recordinit("gama_d_data");   //铰接角速度变化
 }
 
 
@@ -504,6 +527,10 @@ void MPCNode::isreached(){
 		    calculate_time.closeFile();
 			car_path.closeFile();
 			reference_path.closeFile();
+			velocity_data.closeFile(); //纵向速度变化
+			aac_data.closeFile();      //加速度变化
+			gama_data.closeFile();     //铰接角度变化
+			gama_d_data.closeFile();   //铰接角速度变化
         }
     }
 
@@ -548,6 +575,8 @@ void MPCNode::controlLoopCB()
         // Convert to the vehicle coordinate system
         VectorXd x_veh(N);
         VectorXd y_veh(N);
+        VectorXd x_veh_cut(int(N/2));
+        VectorXd y_veh_cut(int(N/2));
         for(int i = 0; i < N; i++) 
         {
 		   //因为map_path和px,py都是map坐标系下面的值
@@ -555,13 +584,18 @@ void MPCNode::controlLoopCB()
             const double dx = map_path.poses[i].pose.position.x - px;
             const double dy = map_path.poses[i].pose.position.y - py;
 			double e_dis=sqrt(dx*dx+dy*dy);
-			if (minimize_i>e_dis){
+			if (minimize_i>=e_dis){
 			   end_num = i;
 			   minimize_i = e_dis;
 			}
             x_veh[i] = dx * cospsi + dy * sinpsi; //在base_link坐标系下面参考路径点和车辆位置点之间的偏差值x
             y_veh[i] = dy * cospsi - dx * sinpsi; //在base_link坐标系下面参考路径点和车辆位置点之间的偏差值y
+			if(i<int(N/2)){
+			  x_veh_cut[i] = x_veh[i]; 
+			  y_veh_cut[i] = y_veh[i]; 
+			}
         }
+
 		//clear_mappath(&movebase_path,end_num);
 		if(!clear_mappath(&movebase_path,end_num)){
 		   ROS_WARN("Can not clear reference path that car have been cross");
@@ -571,10 +605,46 @@ void MPCNode::controlLoopCB()
 		// 计算三次样条曲线
         auto coeffs = polyfit(x_veh, y_veh, 3); 
 
+		/***************将样条曲线可视化********************/
+        // Display the MPC predicted trajectory
+        //_mpc_polyfitpath = nav_msgs::Path();
+        //_mpc_polyfitpath.header.frame_id = _car_frame; // points in car coordinate        
+        //_mpc_polyfitpath.header.stamp = ros::Time::now();
+        //for(int i=0; i<50; i++)
+        //{
+			//double x = i/5;
+			//double y =0;
+			//for (int i = 0; i < coeffs.size(); i++) 
+			//{
+				//y += coeffs[i] * pow(x, i);
+			//}
+            //geometry_msgs::PoseStamped tempPose;
+            //tempPose.header = _mpc_polyfitpath.header;
+            //tempPose.pose.position.x = x;
+            //tempPose.pose.position.y = y;
+            //tempPose.pose.orientation.w = 1.0;
+            //_mpc_polyfitpath.poses.push_back(tempPose); 
+        //}     
+        // publish the mpc trajectory
+        //_pub_mpctraj.publish(_mpc_polyfitpath);
+		/**********************************/
 		const double gama = articulate_angle;
 		//const double gama_d = d_articulate_angle;
         const double cte  = polyeval(coeffs, 0.0);
         const double epsi = atan(coeffs[1]);
+		//cout<<"coffs2\t"<<coeffs[2]<<endl;
+		/*******************************/
+
+		auto coeffs_theta = polyfit(x_veh_cut, y_veh_cut, 3); 
+		double theta_change = 2*abs(coeffs_theta[2]);
+		cout<<theta_change<<endl;
+		if (abs(theta_change < 0.005)) _mpc_params["REF_V"] = _ref_vel +0.4;
+		if (abs(theta_change>=0.005&&theta_change < 0.01)) _mpc_params["REF_V"] = _ref_vel +0.2;
+		if (abs(theta_change >= 0.01&& theta_change < 0.05)) _mpc_params["REF_V"] = _ref_vel;
+		if (abs(theta_change >= 0.05)) _mpc_params["REF_V"] = _ref_vel-0.2; 
+		 _mpc.LoadParams(_mpc_params); //把MPC_Node中参数信息通过_mpc_params传送到MPC.cpp中
+
+		/*******************************/
         VectorXd state(7);
 		/************这块先不进行铰接车改造*****************/
         if(_delay_mode)  //delay_mode默认是true 但是不知道指代的是什么
@@ -643,12 +713,16 @@ void MPCNode::controlLoopCB()
 		evaluateEpsi(coeffs);
 
 		isreached();
+		velocity_data.recordbegin(_speed);
+		aac_data.recordbegin(_throttle);
+		gama_data.recordbegin(articulate_angle);
+		gama_d_data.recordbegin(d_articulate_angle);
 	   //clock_t after_time =clock();
 	   after_time = ros::Time::now();
 	   //double calcu_time = (double)(after_time - current_time)/CLOCKS_PER_SEC;
 	   double calcu_time=(after_time-current_time).toSec();
 	   calculate_time.recordbegin(calcu_time);
-	   cout<<calcu_time<<endl;
+	   //cout<<calcu_time<<endl;
     }
 	// 已经到达目标点
     else
@@ -672,17 +746,17 @@ void MPCNode::controlLoopCB()
 }
 void MPCNode::evaluateCte(Eigen::VectorXd coeffs){
     double etc0 = polyeval(coeffs,0);
-	etc_data.recordbegin(etc0);
+		etc_data.recordbegin(etc0);
 
 }
 void MPCNode::evaluateEpsi(Eigen::VectorXd coeffs){
-   double epsi_0 = atan(coeffs[coeffs.size()-2]);
+   double epsi_0 = atan(coeffs[1]);
    epsi_data.recordbegin(epsi_0);
 }
 
 Recorder::Recorder(){}
 bool Recorder::createFile(string filename){
-	oss<<"/home/ganxin/ROS/ipc/data/mpc/"<<filename<<".txt";
+	oss<<"/home/ganxin/ROS/articulated_vehicle/data/mpc/"<<filename<<".txt";
 
     outFile.open(oss.str().c_str());
     outFile.close();

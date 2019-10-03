@@ -119,9 +119,9 @@ class FG_eval
               fg[0] += _w_cte * CppAD::pow(vars[_cte_start + i] - _ref_cte, 2); // cross deviation error 偏差值的加权量
               fg[0] += _w_epsi * CppAD::pow(vars[_epsi_start + i] - _ref_epsi, 2); // heading error 航向误差的加权量
               fg[0] += _w_vel * CppAD::pow(vars[_v_start + i] - _ref_vel, 2); // speed error  与预期速度的加权量
-			  if(i<_mpc_steps-1){
-              //fg[0] += _w_delta_d * CppAD::pow(vars[_delta_start + i + 1] - vars[_delta_start + i], 2);
-              //fg[0] += _w_accel_d * CppAD::pow(vars[_a_start + i + 1] - vars[_a_start + i], 2);
+			  if(i<_mpc_steps-2){
+				 fg[0] += _w_delta_d * CppAD::pow(vars[_delta_start + i + 1] - vars[_delta_start + i], 2);
+				 fg[0] += _w_accel_d * CppAD::pow(vars[_a_start + i + 1] - vars[_a_start + i], 2);
 			  }
 
             }
@@ -181,7 +181,7 @@ class FG_eval
 				//所以f0-y0就是车辆的位置偏差值
 				//同理psides0是f0的导数,也就是车辆的航向角的tan值
 				//coeffs产生的样条曲线是以baselink为坐标系的,所以x一直是车辆的行驶方向
-				AD<double> yumiao_dis = x0 +0.2;
+				AD<double> yumiao_dis = x0 +0;
 				if(i ==0) 
                 for (int i = 0; i < coeffs.size(); i++) 
                 {
@@ -254,7 +254,7 @@ void MPC::LoadParams(const std::map<string, double> &params)
     _delta_start = _epsi_start + _mpc_steps;
     _a_start     = _delta_start + _mpc_steps - 1;
 
-    cout << "\n!! MPC Obj parameters updated !! " << endl; 
+    //cout << "\n!! MPC Obj parameters updated !! " << endl; 
 }
 
 

@@ -46,6 +46,7 @@ add_executable(autotune src/something_others/autotune.cpp)
 add_executable(transform_output src/transform_output.cpp)
 add_executable(odom_pub src/odom_pub/odom_pub.cpp src/odom_pub/odom_cul.cpp)
 add_executable(showpath src/show_path/showpath.cpp)
+add_executable(Manual_control src/Manual_control.cpp)
 
 add_dependencies(${PROJECT_NAME}_generate_messages_cpp ${PROJECT_NAME}_generate_messages_cpp)
 add_dependencies(controller ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
@@ -56,6 +57,7 @@ add_dependencies(autotune ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_
 add_dependencies(transform_output ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(odom_pub ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(showpath ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(Manual_control ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 target_link_libraries(controller ${catkin_LIBRARIES})
 target_link_libraries(plant_sim ${catkin_LIBRARIES})
@@ -65,6 +67,7 @@ target_link_libraries(autotune ${catkin_LIBRARIES})
 target_link_libraries(transform_output ${catkin_LIBRARIES})
 target_link_libraries(odom_pub ${catkin_LIBRARIES})
 target_link_libraries(showpath ${catkin_LIBRARIES})
+target_link_libraries(Manual_control ${catkin_LIBRARIES})
 
 install(TARGETS controller plant_sim setpoint_node sim_time autotune
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}

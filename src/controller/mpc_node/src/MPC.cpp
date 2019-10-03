@@ -157,7 +157,7 @@ class FG_eval
                 AD<double> x1    = vars[_x_start + i + 1];
                 AD<double> y1    = vars[_y_start + i + 1];
                 AD<double> psi1  = vars[_psi_start + i + 1];
-                AD<double> gama1  = vars[_gama_start + i + 1];
+                AD<double> gama1 = vars[_gama_start + i + 1];
                 AD<double> v1    = vars[_v_start + i + 1];
                 AD<double> cte1  = vars[_cte_start + i + 1];
                 AD<double> epsi1 = vars[_epsi_start + i + 1];
@@ -166,7 +166,7 @@ class FG_eval
                 AD<double> x0    = vars[_x_start + i];
                 AD<double> y0    = vars[_y_start + i];
                 AD<double> psi0  = vars[_psi_start + i];
-                AD<double> gama0  = vars[_gama_start + i];
+                AD<double> gama0 = vars[_gama_start + i];
                 AD<double> v0    = vars[_v_start + i];
                 AD<double> cte0  = vars[_cte_start + i];
                 AD<double> epsi0 = vars[_epsi_start + i];
@@ -181,7 +181,7 @@ class FG_eval
 				//所以f0-y0就是车辆的位置偏差值
 				//同理psides0是f0的导数,也就是车辆的航向角的tan值
 				//coeffs产生的样条曲线是以baselink为坐标系的,所以x一直是车辆的行驶方向
-				AD<double> yumiao_dis = x0 +0;
+				AD<double> yumiao_dis = x0;
 				if(i ==0) 
                 for (int i = 0; i < coeffs.size(); i++) 
                 {

@@ -97,6 +97,7 @@ class MPCNode
         bool _goal_received, _goal_reached, _path_computed, _pub_twist_flag, _debug_info, _delay_mode;
 		bool isrecord_reference_path = false;
 		bool ispathpointenough = true;
+		bool is_change_v;
 
         double polyeval(Eigen::VectorXd coeffs, double x);
         Eigen::VectorXd polyfit(Eigen::VectorXd xvals, Eigen::VectorXd yvals, int order);
@@ -124,6 +125,7 @@ MPCNode::MPCNode()
     pn.param("pub_twist_cmd", _pub_twist_flag, true);
     pn.param("debug_info", _debug_info, false);
     pn.param("delay_mode", _delay_mode, true);
+    pn.param("is_change_velocity", is_change_v, true);
     pn.param("max_speed", _max_speed, 2.0); // unit: m/s
     pn.param("path_length", _pathLength, 8.0); // unit: m
     pn.param("goal_radius", _goalRadius, 0.5); // unit: m
@@ -636,13 +638,32 @@ void MPCNode::controlLoopCB()
 		/*******************************/
 
 		auto coeffs_theta = polyfit(x_veh_cut, y_veh_cut, 3); 
-		double theta_change = 2*abs(coeffs_theta[2]);
+		double theta_change = 2*abs(coeffs_theta[2])+2*abs(articulate_angle);
 		cout<<theta_change<<endl;
-		if (abs(theta_change < 0.005)) _mpc_params["REF_V"] = _ref_vel +0.4;
-		if (abs(theta_change>=0.005&&theta_change < 0.01)) _mpc_params["REF_V"] = _ref_vel +0.2;
-		if (abs(theta_change >= 0.01&& theta_change < 0.05)) _mpc_params["REF_V"] = _ref_vel;
-		if (abs(theta_change >= 0.05)) _mpc_params["REF_V"] = _ref_vel-0.2; 
-		 _mpc.LoadParams(_mpc_params); //把MPC_Node中参数信息通过_mpc_params传送到MPC.cpp中
+		if(is_change_v){
+		   if(_ref_vel <1.3){
+			  if (abs(theta_change < 0.01)) _mpc_params["REF_V"] = _ref_vel +0.6;
+			  if (abs(theta_change>=0.01&&theta_change < 0.05)) _mpc_params["REF_V"] = _ref_vel +0.5;
+			  if (abs(theta_change>=0.05&&theta_change < 0.08)) _mpc_params["REF_V"] = _ref_vel +0.4;
+			  if (abs(theta_change>=0.08&&theta_change < 0.15)) _mpc_params["REF_V"] = _ref_vel +0.2;
+			  if (abs(theta_change>=0.15&&theta_change < 0.2)) _mpc_params["REF_V"] = _ref_vel+0.1 ;
+			  if (abs(theta_change>=0.2&&theta_change < 0.35)) _mpc_params["REF_V"] = _ref_vel ;
+			  if (abs(theta_change >= 0.35&& theta_change < 0.6)) _mpc_params["REF_V"] = _ref_vel-0.3;
+			  if (abs(theta_change >= 0.6)) _mpc_params["REF_V"] = _ref_vel-0.4; 
+
+		   }
+		   if(_ref_vel>=1.3)
+			  if (abs(theta_change < 0.01)) _mpc_params["REF_V"] = _ref_vel;
+		   if (abs(theta_change>=0.01&&theta_change < 0.05)) _mpc_params["REF_V"] = _ref_vel -0.2;
+		   if (abs(theta_change>=0.05&&theta_change < 0.08)) _mpc_params["REF_V"] = _ref_vel-0.4;
+		   if (abs(theta_change>=0.08&&theta_change < 0.15)) _mpc_params["REF_V"] = _ref_vel -0.6;
+		   if (abs(theta_change>=0.15&&theta_change < 0.2)) _mpc_params["REF_V"] = _ref_vel-0.7 ;
+		   if (abs(theta_change>=0.2&&theta_change < 0.35)) _mpc_params["REF_V"] = _ref_vel-0.8;
+		   if (abs(theta_change >= 0.35&& theta_change < 0.6)) _mpc_params["REF_V"] = _ref_vel-0.9;
+		   if (abs(theta_change >= 0.6)) _mpc_params["REF_V"] = _ref_vel-0.9; 
+			_mpc.LoadParams(_mpc_params); //把MPC_Node中参数信息通过_mpc_params传送到MPC.cpp中
+			cout<<"变速"<<endl;
+		}
 
 		/*******************************/
         VectorXd state(7);
@@ -716,7 +737,7 @@ void MPCNode::controlLoopCB()
 		velocity_data.recordbegin(_speed);
 		aac_data.recordbegin(_throttle);
 		gama_data.recordbegin(articulate_angle);
-		gama_d_data.recordbegin(d_articulate_angle);
+		gama_d_data.recordbegin(_steering);
 	   //clock_t after_time =clock();
 	   after_time = ros::Time::now();
 	   //double calcu_time = (double)(after_time - current_time)/CLOCKS_PER_SEC;

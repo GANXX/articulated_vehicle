@@ -609,26 +609,25 @@ void MPCNode::controlLoopCB()
 
 		/***************将样条曲线可视化********************/
         // Display the MPC predicted trajectory
-        //_mpc_polyfitpath = nav_msgs::Path();
-        //_mpc_polyfitpath.header.frame_id = _car_frame; // points in car coordinate        
-        //_mpc_polyfitpath.header.stamp = ros::Time::now();
-        //for(int i=0; i<50; i++)
-        //{
+		//_mpc_polyfitpath = nav_msgs::Path();
+		//_mpc_polyfitpath.header.frame_id = _car_frame; // points in car coordinate        
+		//_mpc_polyfitpath.header.stamp = ros::Time::now();
+		//for(int i=0; i<50; i++)
+		//{
 			//double x = i/5;
 			//double y =0;
 			//for (int i = 0; i < coeffs.size(); i++) 
 			//{
 				//y += coeffs[i] * pow(x, i);
 			//}
-            //geometry_msgs::PoseStamped tempPose;
-            //tempPose.header = _mpc_polyfitpath.header;
-            //tempPose.pose.position.x = x;
-            //tempPose.pose.position.y = y;
-            //tempPose.pose.orientation.w = 1.0;
-            //_mpc_polyfitpath.poses.push_back(tempPose); 
-        //}     
-        // publish the mpc trajectory
-        //_pub_mpctraj.publish(_mpc_polyfitpath);
+			//geometry_msgs::PoseStamped tempPose;
+			//tempPose.header = _mpc_polyfitpath.header;
+			//tempPose.pose.position.x = x;
+			//tempPose.pose.position.y = y;
+			//tempPose.pose.orientation.w = 1.0;
+			//_mpc_polyfitpath.poses.push_back(tempPose); 
+		//}     
+		//_pub_mpctraj.publish(_mpc_polyfitpath);
 		/**********************************/
 		const double gama = articulate_angle;
 		//const double gama_d = d_articulate_angle;
@@ -639,7 +638,7 @@ void MPCNode::controlLoopCB()
 
 		auto coeffs_theta = polyfit(x_veh_cut, y_veh_cut, 3); 
 		double theta_change = 2*abs(coeffs_theta[2])+2*abs(articulate_angle);
-		cout<<theta_change<<endl;
+		//cout<<theta_change<<endl;
 		if(is_change_v){
 		   if(_ref_vel <1.3){
 			  if (abs(theta_change < 0.01)) _mpc_params["REF_V"] = _ref_vel +0.6;
@@ -652,17 +651,18 @@ void MPCNode::controlLoopCB()
 			  if (abs(theta_change >= 0.6)) _mpc_params["REF_V"] = _ref_vel-0.4; 
 
 		   }
-		   if(_ref_vel>=1.3)
+		   if(_ref_vel>=1.3){
 			  if (abs(theta_change < 0.01)) _mpc_params["REF_V"] = _ref_vel;
-		   if (abs(theta_change>=0.01&&theta_change < 0.05)) _mpc_params["REF_V"] = _ref_vel -0.2;
-		   if (abs(theta_change>=0.05&&theta_change < 0.08)) _mpc_params["REF_V"] = _ref_vel-0.4;
-		   if (abs(theta_change>=0.08&&theta_change < 0.15)) _mpc_params["REF_V"] = _ref_vel -0.6;
-		   if (abs(theta_change>=0.15&&theta_change < 0.2)) _mpc_params["REF_V"] = _ref_vel-0.7 ;
-		   if (abs(theta_change>=0.2&&theta_change < 0.35)) _mpc_params["REF_V"] = _ref_vel-0.8;
-		   if (abs(theta_change >= 0.35&& theta_change < 0.6)) _mpc_params["REF_V"] = _ref_vel-0.9;
-		   if (abs(theta_change >= 0.6)) _mpc_params["REF_V"] = _ref_vel-0.9; 
+			  if (abs(theta_change>=0.01&&theta_change < 0.05)) _mpc_params["REF_V"] = _ref_vel -0.2;
+		      if (abs(theta_change>=0.05&&theta_change < 0.08)) _mpc_params["REF_V"] = _ref_vel-0.4;
+		      if (abs(theta_change>=0.08&&theta_change < 0.15)) _mpc_params["REF_V"] = _ref_vel -0.6;
+		      if (abs(theta_change>=0.15&&theta_change < 0.2)) _mpc_params["REF_V"] = _ref_vel-0.7 ;
+		      if (abs(theta_change>=0.2&&theta_change < 0.35)) _mpc_params["REF_V"] = _ref_vel-0.8;
+		      if (abs(theta_change >= 0.35&& theta_change < 0.6)) _mpc_params["REF_V"] = _ref_vel-0.9;
+		      if (abs(theta_change >= 0.6)) _mpc_params["REF_V"] = _ref_vel-0.9; 
 			_mpc.LoadParams(_mpc_params); //把MPC_Node中参数信息通过_mpc_params传送到MPC.cpp中
-			cout<<"变速"<<endl;
+
+		   }
 		}
 
 		/*******************************/
